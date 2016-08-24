@@ -166,7 +166,7 @@ table {
     height: 16px;
   }
 
-  #attr-conf
+#attr-conf
 {
     position:absolute; 
     right:5px; 
@@ -177,6 +177,16 @@ table {
     background-image: url("./img/conf.png");
 }
 
+#attr-button
+{
+    position:absolute; 
+    right:65px; 
+    bottom: 5px; 
+    z-index:10000; 
+    width:48px; 
+    height:48px; 
+    background-image: url("./img/conf.png");
+}
 
   #attr
   {
@@ -293,6 +303,7 @@ table {
      <div id="map" class="map">
        <div id="attr"></div>
        <div id="attr-conf" onclick="javascript:location.href='http://localhost:3000/home'"></div>
+       <div id="attr-button" onclick="javascript:location.href='http://localhost:3000/home'"></div>
        <div id="info"></div>
 
        <!--div id="open"><a href="javascript:openToolbar();"><img height="50px" src='./img/menuIcon.png'/></a></div--> 

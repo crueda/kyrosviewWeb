@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Kyros View</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='./img/kyros.png' rel='shortcut icon' type='image/png'> 
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <style>
   html,body{
@@ -23,9 +24,32 @@
       height:100%;
       margin: auto;
   }
+
+  #attr-conf
+{
+    position:absolute; 
+    right:5px; 
+    bottom: 5px; 
+    z-index:10000; 
+    width:48px; 
+    height:48px; 
+    background-image: url("./img/conf.png");
+}
+
+#attr-button
+{
+    position:absolute; 
+    right:65px; 
+    bottom: 5px; 
+    z-index:10000; 
+    width:48px; 
+    height:48px; 
+    background-image: url("./img/conf.png");
+}
+
+
   </style>
 
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 
   <script type="text/javascript">
   $(function () {
@@ -248,12 +272,21 @@ $(document).ready(function(){
    jQuery('#myCarousel').css('width',width+'px');   //and setting height of carousel
    $("#container").css({ top: '0px' });
    $("#container").css({ left: '0px' });
+   // $('#myCarousel').carousel({ interval: 30000, cycle: false });
+   $('#myCarousel').carousel({
+    interval: 120000,
+    cycle: false
+    });
+
 });
 </script>
 
 
 
   <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <div id="attr-conf" onclick="javascript:location.href='http://localhost:3000/home'"></div>
+        <div id="attr-button" onclick="javascript:location.href='http://localhost:3000/home'"></div>
+
     <!-- Indicators -->
     <ol class="carousel-indicators">
       <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
