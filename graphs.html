@@ -23,7 +23,9 @@
       width: 80%;
       height:100%;
       margin: auto;
+
   }
+
 
   #attr-conf
 {
@@ -44,7 +46,7 @@
     z-index:10000; 
     width:48px; 
     height:48px; 
-    background-image: url("./img/conf.png");
+    background-image: url("./img/button_map.png");
 }
 
 
@@ -65,7 +67,7 @@
             text: 'Velocidad y altura'
         },
         subtitle: {
-            text: 'Dia actual'
+            text: 'Últimas 24 horas'
         },
         
         xAxis: {
@@ -118,7 +120,7 @@
             text: 'Velocidad y altura'
         },
         subtitle: {
-            text: 'Semana actual'
+            text: 'Últimos 7 días'
         },
         
         xAxis: {
@@ -170,7 +172,7 @@
             text: 'Velocidad y altura'
         },
         subtitle: {
-            text: 'Mes actual'
+            text: 'Últimos 31 días'
         },
         
         xAxis: {
@@ -213,42 +215,42 @@
         series: seriesOptionsMonth
     });
     }
-    $.getJSON('velocidad.json',    function (data) {
+    $.getJSON('./json/devices/speed/lastDay/6.json',    function (data) {
             seriesOptionsDay[0] = {
                 name: 'Velocidad',
                 data: data
             };       
         });
 
-    $.getJSON('altura.json',    function (data) {
+    $.getJSON('./json/devices/altitude/lastDay/6.json',    function (data) {
             seriesOptionsDay[1] = {
                 name: 'Altura',
                 data: data
             };
             createChartDay();            
         });
-    $.getJSON('velocidad.json',    function (data) {
+    $.getJSON('./json/devices/speed/lastWeek/6.json',    function (data) {
             seriesOptionsWeek[0] = {
                 name: 'Velocidad',
                 data: data
             };       
         });
 
-    $.getJSON('altura.json',    function (data) {
+    $.getJSON('./json/devices/altitude/lastWeek/6.json',    function (data) {
             seriesOptionsWeek[1] = {
                 name: 'Altura',
                 data: data
             };
             createChartWeek();            
         });
-    $.getJSON('velocidad.json',    function (data) {
+    $.getJSON('./json/devices/speed/lastMonth/6.json',    function (data) {
             seriesOptionsMonth[0] = {
                 name: 'Velocidad',
                 data: data
             };       
         });
 
-    $.getJSON('altura.json',    function (data) {
+    $.getJSON('./json/devices/altitude/lastMonth/6.json',    function (data) {
             seriesOptionsMonth[1] = {
                 name: 'Altura',
                 data: data
