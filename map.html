@@ -256,6 +256,7 @@ table {
  var deviceId = null;
  var lon_view = null;
  var lat_view = null;
+ var iconDict = {};
  var vehicleLicenseDict = {};
  var aliasDict = {};
  var latitudeDict = {};
@@ -275,6 +276,18 @@ table {
 </script>
 
 <script>
+
+function isMobile(){
+    return (
+        (navigator.userAgent.match(/Android/i)) ||
+        (navigator.userAgent.match(/webOS/i)) ||
+        (navigator.userAgent.match(/iPhone/i)) ||
+        (navigator.userAgent.match(/iPod/i)) ||
+        (navigator.userAgent.match(/iPad/i)) ||
+        (navigator.userAgent.match(/BlackBerry/))
+    );
+}
+
   function closeToolbar() {
     
     var op = 1;  // initial opacity
@@ -287,10 +300,12 @@ table {
         document.getElementById('toolbar').style.filter = 'alpha(opacity=' + op * 100 + ")";
         op -= op * 0.5;
     }, 50);
-    
+
+      document.getElementById('attr').style.display = 'block';    
   }
 
   function openToolbar(deviceId) {
+    document.getElementById('tooltipIcon').innerHTML = "<img src='./images/" + iconDict[deviceId] + "'/>";
     document.getElementById('tooltipVehicleLicense').innerHTML = vehicleLicenseDict[deviceId];
     document.getElementById('tooltipAlias').innerHTML = aliasDict[deviceId];
     document.getElementById('tooltipLatitude').innerHTML = latitudeDict[deviceId];
@@ -311,9 +326,43 @@ table {
         op += op * 0.5;
     }, 50);
   }
-
-
   }
+
+function openToolbarMobile(deviceId) {
+    var window_height = $(window).height();  //getting windows height
+    var window_width = $(window).width();  //getting windows width
+
+    $("#toolbar").css({ width: window_width });
+    $("#toolbar").css({ height: window_height });
+    $("#toolbar").css({ top: 0 });
+    $("#toolbar").css({ left: 0 });
+
+    document.getElementById('attr').style.display = 'none';
+
+
+    document.getElementById('tooltipIcon').innerHTML = "<img src='./images/" + iconDict[deviceId] + "'/>";
+    document.getElementById('tooltipVehicleLicense').innerHTML = vehicleLicenseDict[deviceId];
+    document.getElementById('tooltipAlias').innerHTML = aliasDict[deviceId];
+    document.getElementById('tooltipLatitude').innerHTML = latitudeDict[deviceId];
+    document.getElementById('tooltipLongitude').innerHTML = longitudeDict[deviceId];
+    document.getElementById('tooltipSpeed').innerHTML = speedDict[deviceId];
+
+
+    if(document.getElementById('toolbar').style.opacity <1){
+    document.getElementById('toolbar').style.display = 'block';
+    
+    var op = 0.1;  // initial opacity
+    var timer = setInterval(function () {
+        if (op >= 0.9){
+            clearInterval(timer);
+        }
+        document.getElementById('toolbar').style.opacity = op;
+        document.getElementById('toolbar').style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.5;
+    }, 50);
+  }
+  }
+
 </script>
 
 </head>
@@ -325,8 +374,8 @@ table {
     <div class="span12">
      <div id="map" class="map">
        <div id="attr"></div>
-       <div id="attr-conf" onclick="javascript:location.href='http://localhost:3000/home'"></div>
-       <div id="attr-button" onclick="javascript:location.href='http://localhost:3000/home'"></div>
+       <div id="attr-conf" onclick="javascript:location.href='http://view.kyroslbs.com/home'"></div>
+       <div id="attr-button" onclick="javascript:location.href='http://view.kyroslbs.com/graphs'"></div>
        <div id="info"></div>
 
        <!--div id="open"><a href="javascript:openToolbar();"><img height="50px" src='./img/menuIcon.png'/></a></div--> 
@@ -334,6 +383,10 @@ table {
         <div id="close" ><a href="javascript:closeToolbar();"><img src="./img/close3.png"/></a></div>
         <div id="deviceInfo">
           <table>
+            <tr>
+              <td><img src='./img/selectButton2.png'/></td>
+              <td id="tooltipIcon"></td>
+            </tr>
             <tr>
               <td><font color="white" id="tooltipVehicleLicense">---</font></td>
               <td>Vehicle license</td>
@@ -572,7 +625,7 @@ function loadLayer() {
  if (username != null)
   fileJson = "./json/users/realTime/" + username + ".json?";
   
- //var fileJson = "./json/realTime/<%=user%>.json?";
+ //var fileJson = "./json/users/realTime/<%=user%>.json?";
 
  $.getJSON( fileJson + new Date().getTime(), function( data ) {
 
@@ -600,7 +653,7 @@ function reloadLayer() {
  if (username != null)
   fileJson = "./json/users/realTime/" + username + ".json?";
   
- //var fileJson = "./json/realTime/<%=user%>.json?";
+ //var fileJson = "./json/users/realTime/<%=user%>.json?";
 
  $.getJSON( fileJson + new Date().getTime(), function( data ) {
 
@@ -622,6 +675,7 @@ function processDevice(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_
  } */          
    //TODO: lo quito para que siempre salgan los coches ordenados ?
    //if (dict[ident][0] != lon  || dict[ident][1] != lat) 
+  iconDict[deviceId] = icon;
   vehicleLicenseDict[deviceId] = ident;
   aliasDict[deviceId] = alias;
   latitudeDict[deviceId] = lat;
@@ -1040,12 +1094,18 @@ var displayFeatureInfo = function(pixel) {
    return feature;
  });
  if (feature) {
-             openToolbar(feature.get('id'));
+    if (isMobile()) {
+             openToolbarMobile(feature.get('id'));
+    } else {
              //alert(feature.get('name'));
              info.tooltip('hide')
              .attr('data-original-title', feature.get('name'))
              .tooltip('fixTitle')
              .tooltip('show');
+
+             openToolbar(feature.get('id'));      
+    }
+             
            } else {
              info.tooltip('hide');
              //closeToolbar();
@@ -1062,7 +1122,9 @@ var displayFeatureInfo = function(pixel) {
          
          map.on('click', function(evt) {
            displayFeatureInfo(evt.pixel);
-           closeToolbar();
+           if (!isMobile()) {
+              closeToolbar();
+            }
 
          });
          
