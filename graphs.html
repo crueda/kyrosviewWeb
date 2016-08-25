@@ -54,209 +54,319 @@
 
 
   <script type="text/javascript">
-  $(function () {
-    var seriesOptionsDay = [];
-    var seriesOptionsWeek = [];
-    var seriesOptionsMonth = [];
-    function createChartDay() {
-      $('#containerDay').highcharts({
-        chart: {
-            type: 'area'
-        },
-        title: {
-            text: 'Velocidad y altura'
-        },
-        subtitle: {
-            text: 'Últimas 24 horas'
-        },
-        
-        xAxis: {
-            allowDecimals: false,
-            labels: {
-                formatter: function () {
-                    return Highcharts.dateFormat('%H:%M', new Date(this.value))
-                }
-            }
-        },
-        yAxis: {
-                labels: {
-                    formatter: function () {
-                        return (this.value > 0 ? '  ' : '') + this.value + '';
-                    }
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 5,
-                    color: 'silver'
-                }]
-            },
-        tooltip: {
-            //pointFormat: '{series.name} =  <b>{point.y:,.0f}</b><br/>en {point.x}'
-            pointFormat: '{series.name} =  <b>{point.y:,.0f}</b><br/>'
-        },
-        plotOptions: {
-            area: {
-                marker: {
-                    enabled: false,
-                    symbol: 'circle',
-                    radius: 2,
-                    states: {
-                        hover: {
-                            enabled: true
-                        }
-                    }
-                }
-            }
-        },
-        series: seriesOptionsDay
-    });
-    }
-    function createChartWeek() {
-      $('#containerWeek').highcharts({
-        chart: {
-            type: 'area'
-        },
-        title: {
-            text: 'Velocidad y altura'
-        },
-        subtitle: {
-            text: 'Últimos 7 días'
-        },
-        
-        xAxis: {
-            allowDecimals: false,
-            labels: {
-                formatter: function () {
-                    return Highcharts.dateFormat('%e.%b', new Date(this.value))
-                }
-            }
-        },
-        yAxis: {
-                labels: {
-                    formatter: function () {
-                        return (this.value > 0 ? '  ' : '') + this.value + '';
-                    }
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 5,
-                    color: 'silver'
-                }]
-            },
-        tooltip: {
-            pointFormat: '{series.name} =  <b>{point.y:,.0f}</b><br/>'
-        },
-        plotOptions: {
-            area: {
-                marker: {
-                    enabled: false,
-                    symbol: 'circle',
-                    radius: 2,
-                    states: {
-                        hover: {
-                            enabled: true
-                        }
-                    }
-                }
-            }
-        },
-        series: seriesOptionsWeek
-    });
-    }
-    function createChartMonth() {
-      $('#containerMonth').highcharts({
-        chart: {
-            type: 'area'
-        },
-        title: {
-            text: 'Velocidad y altura'
-        },
-        subtitle: {
-            text: 'Últimos 31 días'
-        },
-        
-        xAxis: {
-            allowDecimals: false,
-            labels: {
-                formatter: function () {
-                    return Highcharts.dateFormat('%b-%y', new Date(this.value))
-                }
-            }
-        },
-        yAxis: {
-                labels: {
-                    formatter: function () {
-                        return (this.value > 0 ? '  ' : '') + this.value + '';
-                    }
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 5,
-                    color: 'silver'
-                }]
-            },
-        tooltip: {
-            pointFormat: '{series.name} =  <b>{point.y:,.0f}</b><br/>'
-        },
-        plotOptions: {
-            area: {
-                marker: {
-                    enabled: false,
-                    symbol: 'circle',
-                    radius: 2,
-                    states: {
-                        hover: {
-                            enabled: true
-                        }
-                    }
-                }
-            }
-        },
-        series: seriesOptionsMonth
-    });
-    }
-    $.getJSON('./json/devices/speed/lastDay/6.json',    function (data) {
-            seriesOptionsDay[0] = {
-                name: 'Velocidad',
-                data: data
-            };       
-        });
 
-    $.getJSON('./json/devices/altitude/lastDay/6.json',    function (data) {
-            seriesOptionsDay[1] = {
-                name: 'Altura',
-                data: data
-            };
-            createChartDay();            
-        });
-    $.getJSON('./json/devices/speed/lastWeek/6.json',    function (data) {
-            seriesOptionsWeek[0] = {
-                name: 'Velocidad',
-                data: data
-            };       
-        });
+    $(function () {
 
-    $.getJSON('./json/devices/altitude/lastWeek/6.json',    function (data) {
-            seriesOptionsWeek[1] = {
-                name: 'Altura',
-                data: data
-            };
-            createChartWeek();            
-        });
-    $.getJSON('./json/devices/speed/lastMonth/6.json',    function (data) {
-            seriesOptionsMonth[0] = {
-                name: 'Velocidad',
-                data: data
-            };       
-        });
+    /**
+     * In order to synchronize tooltips and crosshairs, override the
+     * built-in events with handlers defined on the parent element.
+     */
+    $('#containerDay').bind('mousemove touchmove touchstart', function (e) {
+        var chart,
+            point,
+            i,
+            event;
 
-    $.getJSON('./json/devices/altitude/lastMonth/6.json',    function (data) {
-            seriesOptionsMonth[1] = {
-                name: 'Altura',
-                data: data
-            };
-            createChartMonth();            
+        for (i = 0; i < Highcharts.charts.length; i = i + 1) {
+            chart = Highcharts.charts[i];
+            event = chart.pointer.normalize(e.originalEvent); // Find coordinates within the chart
+            point = chart.series[0].searchPoint(event, true); // Get the hovered point
+
+            if (point) {
+                point.highlight(e);
+            }
+        }
+    });
+    $('#containerWeek').bind('mousemove touchmove touchstart', function (e) {
+        var chart,
+            point,
+            i,
+            event;
+
+        for (i = 0; i < Highcharts.charts.length; i = i + 1) {
+            chart = Highcharts.charts[i];
+            event = chart.pointer.normalize(e.originalEvent); // Find coordinates within the chart
+            point = chart.series[0].searchPoint(event, true); // Get the hovered point
+
+            if (point) {
+                point.highlight(e);
+            }
+        }
+    });
+    $('#containerMonth').bind('mousemove touchmove touchstart', function (e) {
+        var chart,
+            point,
+            i,
+            event;
+
+        for (i = 0; i < Highcharts.charts.length; i = i + 1) {
+            chart = Highcharts.charts[i];
+            event = chart.pointer.normalize(e.originalEvent); // Find coordinates within the chart
+            point = chart.series[0].searchPoint(event, true); // Get the hovered point
+
+            if (point) {
+                point.highlight(e);
+            }
+        }
+    });
+
+    /**
+     * Override the reset function, we don't need to hide the tooltips and crosshairs.
+     */
+    Highcharts.Pointer.prototype.reset = function () {
+        return undefined;
+    };
+
+    /**
+     * Highlight a point by showing tooltip, setting hover state and draw crosshair
+     */
+    Highcharts.Point.prototype.highlight = function (event) {
+        this.onMouseOver(); // Show the hover marker
+        this.series.chart.tooltip.refresh(this); // Show the tooltip
+        this.series.chart.xAxis[0].drawCrosshair(event, this); // Show the crosshair
+    };
+
+    /**
+     * Synchronize zooming through the setExtremes event handler.
+     */
+    function syncExtremes(e) {
+        var thisChart = this.chart;
+
+        if (e.trigger !== 'syncExtremes') { // Prevent feedback loop
+            Highcharts.each(Highcharts.charts, function (chart) {
+                if (chart !== thisChart) {
+                    if (chart.xAxis[0].setExtremes) { // It is null while updating
+                        chart.xAxis[0].setExtremes(e.min, e.max, undefined, false, { trigger: 'syncExtremes' });
+                    }
+                }
+            });
+        }
+    }
+
+    // Get the data. 
+    $.getJSON('./json/devices/activity/lastDay/6.json', function (activity) {
+        $.each(activity.datasets, function (i, dataset) {
+
+            // Add X values
+            dataset.data = Highcharts.map(dataset.data, function (val, j) {
+                return [activity.xData[j], val];
+            });
+
+            $('<div class="chart">')
+                .appendTo('#containerDay')
+                .highcharts({
+                    chart: {
+                        marginLeft: 40, // Keep all charts left aligned
+                        spacingTop: 20,
+                        spacingBottom: 20
+                    },
+                    title: {
+                        text: dataset.name + ' de las últimas 24 horas',
+                        align: 'left',
+                        margin: 0,
+                        x: 30
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        crosshair: true,
+                        events: {
+                            setExtremes: syncExtremes
+                        },
+                        labels: {
+                            formatter: function () {
+                                return Highcharts.dateFormat('%H:%M', new Date(this.value))
+                            }
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    tooltip: {
+                        positioner: function () {
+                            return {
+                                x: this.chart.chartWidth - this.label.width, // right aligned
+                                y: -1 // align to title
+                            };
+                        },
+                        borderWidth: 0,
+                        backgroundColor: 'none',
+                        pointFormat: '{point.y}',
+                        headerFormat: '',
+                        shadow: false,
+                        style: {
+                            fontSize: '18px'
+                        },
+                        valueDecimals: dataset.valueDecimals
+                    },
+                    series: [{
+                        data: dataset.data,
+                        name: dataset.name,
+                        type: dataset.type,
+                        color: Highcharts.getOptions().colors[i],
+                        fillOpacity: 0.3,
+                        tooltip: {
+                            valueSuffix: ' ' + dataset.unit
+                        }
+                    }]
+                });
         });
+    });
+    $.getJSON('./json/devices/activity/lastWeek/6.json', function (activity) {
+        $.each(activity.datasets, function (i, dataset) {
+
+            // Add X values
+            dataset.data = Highcharts.map(dataset.data, function (val, j) {
+                return [activity.xData[j], val];
+            });
+
+            $('<div class="chart">')
+                .appendTo('#containerWeek')
+                .highcharts({
+                    chart: {
+                        marginLeft: 40, // Keep all charts left aligned
+                        spacingTop: 20,
+                        spacingBottom: 20
+                    },
+                    title: {
+                        text: dataset.name + ' de los últimos 7 días',
+                        align: 'left',
+                        margin: 0,
+                        x: 30
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        crosshair: true,
+                        events: {
+                            setExtremes: syncExtremes
+                        },
+                        labels: {
+                            formatter: function () {
+                                return Highcharts.dateFormat('%e-%b', new Date(this.value))
+                            }
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    tooltip: {
+                        positioner: function () {
+                            return {
+                                x: this.chart.chartWidth - this.label.width, // right aligned
+                                y: -1 // align to title
+                            };
+                        },
+                        borderWidth: 0,
+                        backgroundColor: 'none',
+                        pointFormat: '{point.y}',
+                        headerFormat: '',
+                        shadow: false,
+                        style: {
+                            fontSize: '18px'
+                        },
+                        valueDecimals: dataset.valueDecimals
+                    },
+                    series: [{
+                        data: dataset.data,
+                        name: dataset.name,
+                        type: dataset.type,
+                        color: Highcharts.getOptions().colors[i],
+                        fillOpacity: 0.3,
+                        tooltip: {
+                            valueSuffix: ' ' + dataset.unit
+                        }
+                    }]
+                });
+        });
+    });
+    $.getJSON('./json/devices/activity/lastMonth/6.json', function (activity) {
+        $.each(activity.datasets, function (i, dataset) {
+
+            // Add X values
+            dataset.data = Highcharts.map(dataset.data, function (val, j) {
+                return [activity.xData[j], val];
+            });
+
+            $('<div class="chart">')
+                .appendTo('#containerMonth')
+                .highcharts({
+                    chart: {
+                        marginLeft: 40, // Keep all charts left aligned
+                        spacingTop: 20,
+                        spacingBottom: 20
+                    },
+                    title: {
+                        text: dataset.name + ' de los últimos 30 días',
+                        align: 'left',
+                        margin: 0,
+                        x: 30
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        crosshair: true,
+                        events: {
+                            setExtremes: syncExtremes
+                        },
+                        labels: {
+                            formatter: function () {
+                                return Highcharts.dateFormat('%e-%b-%y', new Date(this.value))
+                            }
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: null
+                        }
+                    },
+                    tooltip: {
+                        positioner: function () {
+                            return {
+                                x: this.chart.chartWidth - this.label.width, // right aligned
+                                y: -1 // align to title
+                            };
+                        },
+                        borderWidth: 0,
+                        backgroundColor: 'none',
+                        pointFormat: '{point.y}',
+                        headerFormat: '',
+                        shadow: false,
+                        style: {
+                            fontSize: '18px'
+                        },
+                        valueDecimals: dataset.valueDecimals
+                    },
+                    series: [{
+                        data: dataset.data,
+                        name: dataset.name,
+                        type: dataset.type,
+                        color: Highcharts.getOptions().colors[i],
+                        fillOpacity: 0.3,
+                        tooltip: {
+                            valueSuffix: ' ' + dataset.unit
+                        }
+                    }]
+                });
+        });
+    });    
+
 
 });
     </script>
@@ -269,12 +379,23 @@
 <script>
 $(document).ready(function(){
    var height = $(window).height();  //getting windows height
+   var width = $(window).width();  //getting windows width
    jQuery('#myCarousel').css('height',height+'px');   //and setting height of carousel
-   var width = $(window).width();  //getting windows height
-   jQuery('#myCarousel').css('width',width+'px');   //and setting height of carousel
-   $("#container").css({ top: '0px' });
-   $("#container").css({ left: '0px' });
+   jQuery('#myCarousel').css('width',width+'px');   //and setting width of carousel
+   //$("#container").css({ top: '0px' });
+   //$("#container").css({ left: '0px' });
    // $('#myCarousel').carousel({ interval: 30000, cycle: false });
+   
+   jQuery('#containerWeek').css('height',height+'px');   //and setting height of carousel
+   jQuery('#containerWeek').css('width',width+'px');   //and setting width of carousel
+   
+   //$("#containerWeek").css({ width: '100%' });
+   $("#containerMonth").css({ width: '100%' });
+   
+   //$('#containerWeek').hide();
+   //$("#containerWeek").css({ width: '100%' });
+   //$("#containerWeek").delay(1000).show(0);
+
    $('#myCarousel').carousel({
     interval: 120000,
     cycle: false
@@ -308,6 +429,7 @@ $(document).ready(function(){
       </div>
     
       <div class="item">
+        <!--img src="./img/img_chania2.jpg" alt="Chania" width="460" height="345"-->
         <div id="containerMonth" style="width: 100%; height: 100%; margin: 0 auto"></div>
       </div>
 
