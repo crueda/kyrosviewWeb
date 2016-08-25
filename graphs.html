@@ -158,7 +158,9 @@
                     chart: {
                         marginLeft: 40, // Keep all charts left aligned
                         spacingTop: 20,
-                        spacingBottom: 20
+                        spacingBottom: 20,
+                        width: $(document).width(),
+                        height: ($(document).height()/2)-30
                     },
                     title: {
                         text: dataset.name + ' de las últimas 24 horas',
@@ -232,8 +234,9 @@
                     chart: {
                         marginLeft: 40, // Keep all charts left aligned
                         spacingTop: 20,
+                        spacingBottom: 20,
                         width: $(document).width(),
-                        spacingBottom: 20
+                        height: ($(document).height()/2)-30
                     },
                     title: {
                         text: dataset.name + ' de los últimos 7 días',
@@ -307,8 +310,9 @@
                     chart: {
                         marginLeft: 40, // Keep all charts left aligned
                         spacingTop: 20,
+                        spacingBottom: 20,
                         width: $(document).width(),
-                        spacingBottom: 20
+                        height: ($(document).height()/2)-30
                     },
                     title: {
                         text: dataset.name + ' de los últimos 30 días',
