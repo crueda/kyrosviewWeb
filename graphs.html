@@ -232,6 +232,7 @@
                     chart: {
                         marginLeft: 40, // Keep all charts left aligned
                         spacingTop: 20,
+                        width: $(document).width(),
                         spacingBottom: 20
                     },
                     title: {
@@ -306,6 +307,7 @@
                     chart: {
                         marginLeft: 40, // Keep all charts left aligned
                         spacingTop: 20,
+                        width: $(document).width(),
                         spacingBottom: 20
                     },
                     title: {
@@ -327,7 +329,8 @@
                         },
                         labels: {
                             formatter: function () {
-                                return Highcharts.dateFormat('%e-%b-%y', new Date(this.value))
+                                //return Highcharts.dateFormat('%e-%b-%y', new Date(this.value))
+                                return Highcharts.dateFormat('%e-%b', new Date(this.value))
                             }
                         }
                     },
@@ -389,6 +392,15 @@ $(document).ready(function(){
    jQuery('#containerWeek').css('height',height+'px');   //and setting height of carousel
    jQuery('#containerWeek').css('width',width+'px');   //and setting width of carousel
    
+/* $(window).resize(function() 
+{    
+    chart.setSize(
+       $(document).width(), 
+       $(document).height()/2,
+       false
+    );   
+});*/
+
    //$("#containerWeek").css({ width: '100%' });
    $("#containerMonth").css({ width: '100%' });
    
