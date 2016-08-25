@@ -243,13 +243,14 @@ table {
  var dict_date = {};
  var car = null;
  var username = null;
+ var deviceId = null;
  var lon_view = null;
  var lat_view = null;
 </script>
 
 
 <script>
- window.onload = function() { username=getGETusername(); reloadLayer(); setInterval(reloadLayer,10930); };
+ window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=getGETdeviceId(); loadLayer(); setInterval(reloadLayer,10930); };
  //window.onload = function() { username=getGETusername();  };
 
  $(document).ready(function() {
@@ -399,6 +400,28 @@ wqewq
     }
   }
 
+  function getGETdeviceId() {
+    // capturamos la url
+    var loc = document.location.href;
+    // si existe el interrogante
+    if(loc.indexOf('?')>0) {
+      // cogemos la parte de la url que hay despues del interrogante
+      var getString = loc.split('?')[1];
+      // obtenemos un array con cada clave=valor
+      var GET = getString.split('&');
+      var get = {};
+
+      // recorremos todo el array de valores
+      for(var i = 0, l = GET.length; i < l; i++){
+        var tmp = GET[i].split('=');
+        get[tmp[0]] = unescape(decodeURI(tmp[1]));
+        if (unescape(decodeURI(tmp[0])) == 'deviceId')
+          return unescape(decodeURI(tmp[1]));
+      }
+      return null;
+    }
+  }
+
   function getGETusername() {
     // capturamos la url
     var loc = document.location.href;
@@ -493,6 +516,34 @@ var lineStyle = new ol.style.Style({
       }
     }
 
+function loadLayer() {
+ //$.getJSON( "./tracking_wrc_1.json?" + new Date().getTime(), function( data ) {
+ //$.getJSON( "./json/crueda.json?" + new Date().getTime(), function( data ) {
+ var fileJson = "./json/users/realTime/crueda.json?";
+ if (username != null)
+  fileJson = "./json/users/realTime/" + username + ".json?";
+  
+ //var fileJson = "./json/realTime/<%=user%>.json?";
+
+ $.getJSON( fileJson + new Date().getTime(), function( data ) {
+
+   var items = [];
+   $.each( data, function( key, val ) {
+     processDevice (val.properties.license,val.properties.alias,val.geometry.coordinates[0],val.geometry.coordinates[1],val.properties.speed,val.properties.heading,val.properties.tracking_state,val.properties.vehicle_state, val.properties.icon, val.properties.pos_date);
+
+     if (car != null)
+      followCar(car, val.properties.license,val.geometry.coordinates[1],val.geometry.coordinates[0]);
+     else {
+      if (val.properties.deviceId == deviceId)
+        centerMap(val.geometry.coordinates[0],val.geometry.coordinates[1])
+
+     }
+
+  });               
+ });
+}
+
+
 function reloadLayer() {
  //$.getJSON( "./tracking_wrc_1.json?" + new Date().getTime(), function( data ) {
  //$.getJSON( "./json/crueda.json?" + new Date().getTime(), function( data ) {
@@ -506,7 +557,7 @@ function reloadLayer() {
 
    var items = [];
    $.each( data, function( key, val ) {
-     processCar (val.properties.license,val.properties.alias,val.geometry.coordinates[0],val.geometry.coordinates[1],val.properties.speed,val.properties.heading,val.properties.tracking_state,val.properties.vehicle_state, val.properties.icon, val.properties.pos_date);
+     processDevice (val.properties.license,val.properties.alias,val.geometry.coordinates[0],val.geometry.coordinates[1],val.properties.speed,val.properties.heading,val.properties.tracking_state,val.properties.vehicle_state, val.properties.icon, val.properties.pos_date);
 
      if (car != null)
       followCar(car, val.properties.license,val.geometry.coordinates[1],val.geometry.coordinates[0]);
@@ -514,7 +565,7 @@ function reloadLayer() {
  });
 }
 
-function processCar(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_state, icon, pos_date) {             
+function processDevice(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_state, icon, pos_date) {             
 //function processCar(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_state, icon, pos_date, lat2, lon2, lat3, lon3, lat4, lon4, lat5, lon5) {             
  /*if (ident=='001') 
  {
@@ -631,6 +682,14 @@ map.addLayer(vector);*/
 
     vectorLinesSource.addFeature(featureLine);
   }
+
+ function centerMap(lon, lat) {
+  map.setView (new ol.View({
+    center: ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857'),
+    zoom: 14,
+    maxZoom:22
+  }));
+ }
 
  var fileJsonYear = "./json/users/lastYear/crueda.json?";
  var fileJsonMonth = "./json/users/lastMonth/crueda.json?";
