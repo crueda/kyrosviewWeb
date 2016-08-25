@@ -49,16 +49,16 @@ table {
 
 .bordered {
     border: solid #ccc 1px;
-    -moz-border-radius: 6px;
-    -webkit-border-radius: 6px;
-    border-radius: 6px;
+    -moz-border-radius: 1px;
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
     -webkit-box-shadow: 0 1px 1px #ccc; 
     -moz-box-shadow: 0 1px 1px #ccc; 
     box-shadow: 0 1px 1px #ccc;         
 }
 
 .bordered tr:hover {
-    background: #fbf8e9;
+    background: #F09300;
     -o-transition: all 0.1s ease-in-out;
     -webkit-transition: all 0.1s ease-in-out;
     -moz-transition: all 0.1s ease-in-out;
@@ -98,33 +98,33 @@ table {
 }
 
 .bordered th:first-child {
-    -moz-border-radius: 6px 0 0 0;
-    -webkit-border-radius: 6px 0 0 0;
-    border-radius: 6px 0 0 0;
+    -moz-border-radius: 1px 0 0 0;
+    -webkit-border-radius: 1px 0 0 0;
+    border-radius: 1px 0 0 0;
 }
 
 .bordered th:last-child {
-    -moz-border-radius: 0 6px 0 0;
-    -webkit-border-radius: 0 6px 0 0;
-    border-radius: 0 6px 0 0;
+    -moz-border-radius: 0 1px 0 0;
+    -webkit-border-radius: 0 1px 0 0;
+    border-radius: 0 1px 0 0;
 }
 
 .bordered th:only-child{
-    -moz-border-radius: 6px 6px 0 0;
-    -webkit-border-radius: 6px 6px 0 0;
-    border-radius: 6px 6px 0 0;
+    -moz-border-radius: 1px 1px 0 0;
+    -webkit-border-radius: 1px 1px 0 0;
+    border-radius: 1px 1px 0 0;
 }
 
 .bordered tr:last-child td:first-child {
-    -moz-border-radius: 0 0 0 6px;
-    -webkit-border-radius: 0 0 0 6px;
-    border-radius: 0 0 0 6px;
+    -moz-border-radius: 0 0 0 1px;
+    -webkit-border-radius: 0 0 0 1px;
+    border-radius: 0 0 0 1px;
 }
 
 .bordered tr:last-child td:last-child {
-    -moz-border-radius: 0 0 6px 0;
-    -webkit-border-radius: 0 0 6px 0;
-    border-radius: 0 0 6px 0;
+    -moz-border-radius: 0 0 1px 0;
+    -webkit-border-radius: 0 0 1px 0;
+    border-radius: 0 0 1px 0;
 }
 
 
@@ -205,10 +205,17 @@ table {
     display: none;
     left:10px; 
     top: 170px; 
+    background-color: #7B98BC;
+    padding: 10px;
     z-index:2; 
-    width:300px; 
+    width:400px; 
     //background-image: url("./img/fondo.png");
     opacity: 0;
+}
+
+#deviceOdometer
+{
+  margin: 0 auto;
 }
 
   #open
@@ -310,9 +317,35 @@ table {
        <!--div id="open"><a href="javascript:openToolbar();"><img height="50px" src='./img/menuIcon.png'/></a></div--> 
        <div id="toolbar">
         <div id="close" ><a href="javascript:closeToolbar();">X</a></div>
-sdfds
-dsfds
-wqewq
+        <div id="deviceInfo">
+          <table border="1">
+            <tr>
+              <td><font color="white">1615-FDW</font></td>
+              <td>Vehicle license</td>
+            </tr>
+            <tr>
+              <td><font color="white">Coche de reparto 1</font></td>
+              <td>Alias</td>
+            </tr>
+            <tr>
+              <td><font color="white">Juan Perez</font></td>
+              <td>Driver</td>
+            </tr>
+            <tr>
+              <td><font color="white">41.23456</font></td>
+              <td>Latitude</td>
+            </tr>
+            <tr>
+              <td><font color="white">-3.45623</font></td>
+              <td>Longitude</td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
+            </tr>
+          </table>
+        </div>
+        <div id="deviceOdometer">
 <table class="bordered">
 <thead>
 <tr>
@@ -324,32 +357,33 @@ wqewq
 </thead>
   <tbody>
     <tr>
-      <td>1.38</td>
-      <td>0.01</td>
-      <td>0.36</td>
-      <td><font color="red">Consumo</font> combustible (L)</td>
-    </tr>
-    <tr>
-      <td>1.38</td>
-      <td>0.01</td>
-      <td>0.36</td>
+      <td>83.21</td>
+      <td>45.63</td>
+      <td>34.36</td>
       <td><font color="red">Velocidad</font> media (km/h)</td>
     </tr>
     <tr>
-      <td>1.38</td>
-      <td>0.01</td>
-      <td>0.36</td>
+      <td>156</td>
+      <td>821</td>
+      <td>12342</td>
       <td><font color="red">Distancia</font> recorrida (Km)</td>
     </tr>
     <tr>
-      <td>1.38</td>
-      <td>0.01</td>
-      <td>0.36</td>
+      <td>9.38</td>
+      <td>10.01</td>
+      <td>8.36</td>
+      <td><font color="red">Consumo</font> combustible (L)</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>24</td>
+      <td>100</td>
       <td><font color="red">Horas</font> conducción</td>
     </tr>
   </tbody>
 </table>
 
+</div>
 
        </div>
 
@@ -1065,6 +1099,7 @@ var displayFeatureInfo = function(pixel) {
          
          map.on('click', function(evt) {
            displayFeatureInfo(evt.pixel);
+           closeToolbar();
 
          });
          
