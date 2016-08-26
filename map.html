@@ -290,8 +290,8 @@ table {
 
 <script>
  window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=getGETdeviceId(); loadLayer(); setInterval(reloadLayer,5000); };
- //window.onload = function() { username=getGETusername();  };
-
+ //window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=<%=deviceId%>; loadLayer(); setInterval(reloadLayer,5000); };
+ 
  $(document).ready(function() {
   $.ajaxSetup({ cache: false });
   if (!isMobile()) {
@@ -690,6 +690,7 @@ function loadLayer() {
   fileJson = "./json/users/realTime/" + username + ".json?";
   
  //var fileJson = "./json/users/realTime/<%=user%>.json?";
+
 
  $.getJSON( fileJson + new Date().getTime(), function( data ) {
 
