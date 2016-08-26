@@ -180,7 +180,18 @@ table {
     background-image: url("./img/conf.png");
 }
 
-#attr-button
+#attr-button-update
+{
+    position:absolute; 
+    left:5px; 
+    bottom: 5px; 
+    z-index:10000; 
+    width:48px; 
+    height:48px; 
+    background-image: url("./img/button_update.png");
+}
+
+#attr-button-graphs
 {
     position:absolute; 
     right:65px; 
@@ -202,7 +213,7 @@ table {
     background-image: url("./img/kyroslbs.png");
   }
 
-#toolbar
+#tooltip
 {
     position:absolute; 
     display: none;
@@ -254,8 +265,6 @@ table {
  var car = null;
  var username = null;
  var deviceId = null;
- var lon_view = null;
- var lat_view = null;
  var iconDict = {};
  var vehicleLicenseDict = {};
  var aliasDict = {};
@@ -266,11 +275,14 @@ table {
 
 
 <script>
- window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=getGETdeviceId(); loadLayer(); setInterval(reloadLayer,10930); };
+ window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=getGETdeviceId(); loadLayer(); setInterval(reloadLayer,5000); };
  //window.onload = function() { username=getGETusername();  };
 
  $(document).ready(function() {
   $.ajaxSetup({ cache: false });
+  if (!isMobile()) {
+    document.getElementById('attr-button-update').style.display = 'none';
+  }
 });
 
 </script>
@@ -278,6 +290,7 @@ table {
 <script>
 
 function isMobile(){
+  //return true;
     return (
         (navigator.userAgent.match(/Android/i)) ||
         (navigator.userAgent.match(/webOS/i)) ||
@@ -288,23 +301,23 @@ function isMobile(){
     );
 }
 
-  function closeToolbar() {
+  function closeTooltip() {
     
     var op = 1;  // initial opacity
     var timer = setInterval(function () {
         if (op <= 0.1){
             clearInterval(timer);
-            document.getElementById('toolbar').style.display = 'none';
+            document.getElementById('tooltip').style.display = 'none';
         }
-        document.getElementById('toolbar').style.opacity = op;
-        document.getElementById('toolbar').style.filter = 'alpha(opacity=' + op * 100 + ")";
+        document.getElementById('tooltip').style.opacity = op;
+        document.getElementById('tooltip').style.filter = 'alpha(opacity=' + op * 100 + ")";
         op -= op * 0.5;
     }, 50);
 
       document.getElementById('attr').style.display = 'block';    
   }
 
-  function openToolbar(deviceId) {
+  function openTooltip(deviceId) {
     document.getElementById('tooltipIcon').innerHTML = "<img src='./images/" + iconDict[deviceId] + "'/>";
     document.getElementById('tooltipVehicleLicense').innerHTML = vehicleLicenseDict[deviceId];
     document.getElementById('tooltipAlias').innerHTML = aliasDict[deviceId];
@@ -313,29 +326,29 @@ function isMobile(){
     document.getElementById('tooltipSpeed').innerHTML = speedDict[deviceId];
 
 
-    if(document.getElementById('toolbar').style.opacity <1){
-    document.getElementById('toolbar').style.display = 'block';
+    if(document.getElementById('tooltip').style.opacity <1){
+    document.getElementById('tooltip').style.display = 'block';
     
     var op = 0.1;  // initial opacity
     var timer = setInterval(function () {
         if (op >= 0.9){
             clearInterval(timer);
         }
-        document.getElementById('toolbar').style.opacity = op;
-        document.getElementById('toolbar').style.filter = 'alpha(opacity=' + op * 100 + ")";
+        document.getElementById('tooltip').style.opacity = op;
+        document.getElementById('tooltip').style.filter = 'alpha(opacity=' + op * 100 + ")";
         op += op * 0.5;
     }, 50);
   }
   }
 
-function openToolbarMobile(deviceId) {
+function openTooltipMobile(deviceId) {
     var window_height = $(window).height();  //getting windows height
     var window_width = $(window).width();  //getting windows width
 
-    $("#toolbar").css({ width: window_width });
-    $("#toolbar").css({ height: window_height });
-    $("#toolbar").css({ top: 0 });
-    $("#toolbar").css({ left: 0 });
+    $("#tooltip").css({ width: window_width });
+    $("#tooltip").css({ height: window_height });
+    $("#tooltip").css({ top: 0 });
+    $("#tooltip").css({ left: 0 });
 
     document.getElementById('attr').style.display = 'none';
 
@@ -348,19 +361,19 @@ function openToolbarMobile(deviceId) {
     document.getElementById('tooltipSpeed').innerHTML = speedDict[deviceId];
 
 
-    if(document.getElementById('toolbar').style.opacity <1){
-    document.getElementById('toolbar').style.display = 'block';
-    
-    var op = 0.1;  // initial opacity
-    var timer = setInterval(function () {
-        if (op >= 0.9){
-            clearInterval(timer);
-        }
-        document.getElementById('toolbar').style.opacity = op;
-        document.getElementById('toolbar').style.filter = 'alpha(opacity=' + op * 100 + ")";
-        op += op * 0.5;
-    }, 50);
-  }
+    if(document.getElementById('tooltip').style.opacity <1){
+      document.getElementById('tooltip').style.display = 'block';
+      
+      var op = 0.1;  // initial opacity
+      var timer = setInterval(function () {
+          if (op >= 0.9){
+              clearInterval(timer);
+          }
+          document.getElementById('tooltip').style.opacity = op;
+          document.getElementById('tooltip').style.filter = 'alpha(opacity=' + op * 100 + ")";
+          op += op * 0.5;
+      }, 50);
+    }
   }
 
 </script>
@@ -375,12 +388,12 @@ function openToolbarMobile(deviceId) {
      <div id="map" class="map">
        <div id="attr"></div>
        <div id="attr-conf" onclick="javascript:location.href='http://view.kyroslbs.com/home'"></div>
-       <div id="attr-button" onclick="javascript:location.href='http://view.kyroslbs.com/graphs'"></div>
+       <div id="attr-button-graphs" onclick="javascript:location.href='http://view.kyroslbs.com/graphs'"></div>
+       <div id="attr-button-update" onclick="javascript:reloadLayer();"></div>
        <div id="info"></div>
 
-       <!--div id="open"><a href="javascript:openToolbar();"><img height="50px" src='./img/menuIcon.png'/></a></div--> 
-       <div id="toolbar">
-        <div id="close" ><a href="javascript:closeToolbar();"><img src="./img/close3.png"/></a></div>
+       <div id="tooltip">
+        <div id="close" ><a href="javascript:closeTooltip();"><img src="./img/close.png"/></a></div>
         <div id="deviceInfo">
           <table>
             <tr>
@@ -414,44 +427,43 @@ function openToolbarMobile(deviceId) {
           </table>
         </div>
         <div id="deviceOdometer">
-<table class="bordered">
-<thead>
-<tr>
-      <th class="numeric" width="20%">Día</th>
-      <th class="numeric" width="20%">Semana</th>
-      <th class="numeric" width="20%">Mes</th>
-      <th width="40%"></th>
-<tr>
-</thead>
-  <tbody>
-    <tr>
-      <td>21.21</td>
-      <td>45.63</td>
-      <td>83.36</td>
-      <td><font color="red">Velocidad</font> media (km/h)</td>
-    </tr>
-    <tr>
-      <td>15612</td>
-      <td>8212</td>
-      <td>122</td>
-      <td><font color="red">Distancia</font> recorrida (Km)</td>
-    </tr>
-    <tr>
-      <td>9.38</td>
-      <td>10.01</td>
-      <td>8.36</td>
-      <td><font color="red">Consumo</font> combustible (L)</td>
-    </tr>
-    <tr>
-      <td>123</td>
-      <td>24</td>
-      <td>7</td>
-      <td><font color="red">Horas</font> conducción</td>
-    </tr>
-  </tbody>
-</table>
-
-</div>
+          <table class="bordered">
+          <thead>
+          <tr>
+                <th class="numeric" width="20%">Día</th>
+                <th class="numeric" width="20%">Semana</th>
+                <th class="numeric" width="20%">Mes</th>
+                <th width="40%"></th>
+          <tr>
+          </thead>
+            <tbody>
+              <tr>
+                <td>21.21</td>
+                <td>45.63</td>
+                <td>83.36</td>
+                <td><font color="red">Velocidad</font> media (km/h)</td>
+              </tr>
+              <tr>
+                <td>15612</td>
+                <td>8212</td>
+                <td>122</td>
+                <td><font color="red">Distancia</font> recorrida (Km)</td>
+              </tr>
+              <tr>
+                <td>9.38</td>
+                <td>10.01</td>
+                <td>8.36</td>
+                <td><font color="red">Consumo</font> combustible (L)</td>
+              </tr>
+              <tr>
+                <td>123</td>
+                <td>24</td>
+                <td>7</td>
+                <td><font color="red">Horas</font> conducción</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
        </div>
 
@@ -599,15 +611,11 @@ var lineStyle = new ol.style.Style({
 
     function followCar(car, new_car, lat, lon) {
       if (car == new_car) {
-        lat_view = lat;
-        lon_view = lon;
 
         var new_view = new ol.View({
           center: ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857'),
           zoom: map.getView().getZoom()
         });
-
-        var new_pos = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
 
         var pan = ol.animation.pan({
           duration: 700,
@@ -616,6 +624,20 @@ var lineStyle = new ol.style.Style({
         map.beforeRender(pan);
         map.setView(new_view);
       }
+    }
+
+    function moveMap(deviceId) {
+        var new_view = new ol.View({
+          center: ol.proj.transform([longitudeDict[deviceId], latitudeDict[deviceId]], 'EPSG:4326', 'EPSG:3857'),
+          zoom: map.getView().getZoom()
+        });
+        /*
+        var pan = ol.animation.pan({
+          duration: 500,
+          source:  (map.getView().getCenter()),
+        });
+        map.beforeRender(pan);*/
+        map.setView(new_view);
     }
 
 function loadLayer() {
@@ -647,24 +669,24 @@ function loadLayer() {
 
 
 function reloadLayer() {
- //$.getJSON( "./tracking_wrc_1.json?" + new Date().getTime(), function( data ) {
- //$.getJSON( "./json/crueda.json?" + new Date().getTime(), function( data ) {
- var fileJson = "./json/users/realTime/crueda.json?";
- if (username != null)
-  fileJson = "./json/users/realTime/" + username + ".json?";
+  if (!isMobile()) {
+    var fileJson = "./json/users/realTime/crueda.json?";
+    if (username != null)
+      fileJson = "./json/users/realTime/" + username + ".json?";
   
- //var fileJson = "./json/users/realTime/<%=user%>.json?";
+    //var fileJson = "./json/users/realTime/<%=user%>.json?";
 
- $.getJSON( fileJson + new Date().getTime(), function( data ) {
+     $.getJSON( fileJson + new Date().getTime(), function( data ) {
 
-   var items = [];
-   $.each( data, function( key, val ) {
-     processDevice (val.properties.license,val.properties.alias,val.geometry.coordinates[0],val.geometry.coordinates[1],val.properties.speed,val.properties.heading,val.properties.tracking_state,val.properties.vehicle_state, val.properties.icon, val.properties.pos_date, val.properties.deviceId);
+       var items = [];
+       $.each( data, function( key, val ) {
+         processDevice (val.properties.license,val.properties.alias,val.geometry.coordinates[0],val.geometry.coordinates[1],val.properties.speed,val.properties.heading,val.properties.tracking_state,val.properties.vehicle_state, val.properties.icon, val.properties.pos_date, val.properties.deviceId);
 
-     if (car != null)
-      followCar(car, val.properties.license,val.geometry.coordinates[1],val.geometry.coordinates[0]);
-  });               
- });
+         if (car != null)
+          followCar(car, val.properties.license,val.geometry.coordinates[1],val.geometry.coordinates[0]);
+      });               
+     });
+  }
 }
 
 function processDevice(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_state, icon, pos_date, deviceId) {             
@@ -1095,7 +1117,7 @@ var displayFeatureInfo = function(pixel) {
  });
  if (feature) {
     if (isMobile()) {
-             openToolbarMobile(feature.get('id'));
+             openTooltipMobile(feature.get('id'));
     } else {
              //alert(feature.get('name'));
              info.tooltip('hide')
@@ -1103,12 +1125,13 @@ var displayFeatureInfo = function(pixel) {
              .tooltip('fixTitle')
              .tooltip('show');
 
-             openToolbar(feature.get('id'));      
+             openTooltip(feature.get('id')); 
+             //moveMap(feature.get('id'));     
     }
              
            } else {
              info.tooltip('hide');
-             //closeToolbar();
+             //closeTooltip();
            }
          };
          
@@ -1123,7 +1146,7 @@ var displayFeatureInfo = function(pixel) {
          map.on('click', function(evt) {
            displayFeatureInfo(evt.pixel);
            if (!isMobile()) {
-              closeToolbar();
+              closeTooltip();
             }
 
          });
