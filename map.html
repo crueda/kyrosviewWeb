@@ -202,7 +202,7 @@ table {
     background-image: url("./img/button_graph.png");
 }
 
-  #attr
+  #attr-logo
   {
     position:absolute; 
     left:10px; 
@@ -211,6 +211,8 @@ table {
     width:230px; 
     height:106px; 
     background-image: url("./img/kyroslbs.png");
+    background-size: 100% 100%;
+    //background-size: cover;
   }
 
 #tooltip
@@ -271,6 +273,18 @@ table {
  var latitudeDict = {};
  var longitudeDict = {};
  var speedDict = {};
+ var daySpeedDict = {};
+ var weekSpeedDict = {};
+ var monthSpeedDict = {};
+ var dayDistanceDict = {};
+ var weekDistanceDict = {};
+ var monthDistanceDict = {};
+ var dayConsumeDict = {};
+ var weekConsumeDict = {};
+ var monthConsumeDict = {};
+ var dayHoursDict = {};
+ var weekHoursDict = {};
+ var monthHoursDict = {};
 </script>
 
 
@@ -283,6 +297,12 @@ table {
   if (!isMobile()) {
     document.getElementById('attr-button-update').style.display = 'none';
   }
+
+  var width_window = $(window).width();  //getting windows width
+  var height_window = $(window).height();  //getting windows height
+
+  $("#attr-logo").css({ width: width_window*0.1281 + 'px' });
+  $("#attr-logo").css({ height: height_window*0.1078+ 'px' });
 });
 
 </script>
@@ -314,7 +334,7 @@ function isMobile(){
         op -= op * 0.5;
     }, 50);
 
-      document.getElementById('attr').style.display = 'block';    
+      document.getElementById('attr-logo').style.display = 'block';    
   }
 
   function openTooltip(deviceId) {
@@ -324,7 +344,18 @@ function isMobile(){
     document.getElementById('tooltipLatitude').innerHTML = latitudeDict[deviceId];
     document.getElementById('tooltipLongitude').innerHTML = longitudeDict[deviceId];
     document.getElementById('tooltipSpeed').innerHTML = speedDict[deviceId];
-
+    document.getElementById('tooltipDaySpeed').innerHTML = daySpeedDict[deviceId];
+    document.getElementById('tooltipWeekSpeed').innerHTML = weekSpeedDict[deviceId];
+    document.getElementById('tooltipMonthSpeed').innerHTML = monthSpeedDict[deviceId];
+    document.getElementById('tooltipDayDistance').innerHTML = dayDistanceDict[deviceId];
+    document.getElementById('tooltipWeekDistance').innerHTML = weekDistanceDict[deviceId];
+    document.getElementById('tooltipMonthDistance').innerHTML = monthDistanceDict[deviceId];
+    document.getElementById('tooltipDayConsume').innerHTML = dayConsumeDict[deviceId];
+    document.getElementById('tooltipWeekConsume').innerHTML = weekConsumeDict[deviceId];
+    document.getElementById('tooltipMonthConsume').innerHTML = monthConsumeDict[deviceId];
+    document.getElementById('tooltipDayHours').innerHTML = dayHoursDict[deviceId];
+    document.getElementById('tooltipWeekHours').innerHTML = weekHoursDict[deviceId];
+    document.getElementById('tooltipMonthHours').innerHTML = monthHoursDict[deviceId];
 
     if(document.getElementById('tooltip').style.opacity <1){
     document.getElementById('tooltip').style.display = 'block';
@@ -350,7 +381,7 @@ function openTooltipMobile(deviceId) {
     $("#tooltip").css({ top: 0 });
     $("#tooltip").css({ left: 0 });
 
-    document.getElementById('attr').style.display = 'none';
+    document.getElementById('attr-logo').style.display = 'none';
 
 
     document.getElementById('tooltipIcon').innerHTML = "<img src='./images/" + iconDict[deviceId] + "'/>";
@@ -359,7 +390,18 @@ function openTooltipMobile(deviceId) {
     document.getElementById('tooltipLatitude').innerHTML = latitudeDict[deviceId];
     document.getElementById('tooltipLongitude').innerHTML = longitudeDict[deviceId];
     document.getElementById('tooltipSpeed').innerHTML = speedDict[deviceId];
-
+    document.getElementById('tooltipDaySpeed').innerHTML = daySpeedDict[deviceId];
+    document.getElementById('tooltipWeekSpeed').innerHTML = weekSpeedDict[deviceId];
+    document.getElementById('tooltipMonthSpeed').innerHTML = monthSpeedDict[deviceId];
+    document.getElementById('tooltipDayDistance').innerHTML = dayDistanceDict[deviceId];
+    document.getElementById('tooltipWeekDistance').innerHTML = weekDistanceDict[deviceId];
+    document.getElementById('tooltipMonthDistance').innerHTML = monthDistanceDict[deviceId];
+    document.getElementById('tooltipDayConsume').innerHTML = dayConsumeDict[deviceId];
+    document.getElementById('tooltipWeekConsume').innerHTML = weekConsumeDict[deviceId];
+    document.getElementById('tooltipMonthConsume').innerHTML = monthConsumeDict[deviceId];
+    document.getElementById('tooltipDayHours').innerHTML = dayHoursDict[deviceId];
+    document.getElementById('tooltipWeekHours').innerHTML = weekHoursDict[deviceId];
+    document.getElementById('tooltipMonthHours').innerHTML = monthHoursDict[deviceId];
 
     if(document.getElementById('tooltip').style.opacity <1){
       document.getElementById('tooltip').style.display = 'block';
@@ -386,7 +428,7 @@ function openTooltipMobile(deviceId) {
    <div class="row-fluid">
     <div class="span12">
      <div id="map" class="map">
-       <div id="attr"></div>
+       <div id="attr-logo"></div>
        <div id="attr-conf" onclick="javascript:location.href='http://view.kyroslbs.com/home'"></div>
        <div id="attr-button-graphs" onclick="javascript:location.href='http://view.kyroslbs.com/graphs'"></div>
        <div id="attr-button-update" onclick="javascript:reloadLayer();"></div>
@@ -438,27 +480,27 @@ function openTooltipMobile(deviceId) {
           </thead>
             <tbody>
               <tr>
-                <td>21.21</td>
-                <td>45.63</td>
-                <td>83.36</td>
+                <td id="tooltipDaySpeed">---</td>
+                <td id="tooltipWeekSpeed">---</td>
+                <td id="tooltipMonthSpeed">---</td>
                 <td><font color="red">Velocidad</font> media (km/h)</td>
               </tr>
               <tr>
-                <td>15612</td>
-                <td>8212</td>
-                <td>122</td>
+                <td id="tooltipDayDistance">---</td>
+                <td id="tooltipWeekDistance">---</td>
+                <td id="tooltipMonthDistance">---</td>
                 <td><font color="red">Distancia</font> recorrida (Km)</td>
               </tr>
               <tr>
-                <td>9.38</td>
-                <td>10.01</td>
-                <td>8.36</td>
+                <td id="tooltipDayConsume">---</td>
+                <td id="tooltipWeekConsume">---</td>
+                <td id="tooltipMonthConsume">---</td>
                 <td><font color="red">Consumo</font> combustible (L)</td>
               </tr>
               <tr>
-                <td>123</td>
-                <td>24</td>
-                <td>7</td>
+                <td id="tooltipDayHours">---</td>
+                <td id="tooltipWeekHours">---</td>
+                <td id="tooltipMonthHours">---</td>
                 <td><font color="red">Horas</font> conducción</td>
               </tr>
             </tbody>
@@ -662,6 +704,20 @@ function loadLayer() {
         centerMap(val.geometry.coordinates[0],val.geometry.coordinates[1])
 
      }
+
+     // Guardar los datos de odometro
+     daySpeedDict[val.properties.deviceId] = val.properties.daySpeed
+     weekSpeedDict[val.properties.deviceId] = val.properties.weekSpeed
+     monthSpeedDict[val.properties.deviceId] = val.properties.monthSpeed
+     dayDistanceDict[val.properties.deviceId] = val.properties.dayDistance
+     weekDistanceDict[val.properties.deviceId] = val.properties.weekDistance
+     monthDistanceDict[val.properties.deviceId] = val.properties.monthDistance
+     dayConsumeDict[val.properties.deviceId] = val.properties.dayConsume
+     weekConsumeDict[val.properties.deviceId] = val.properties.weekConsume
+     monthConsumeDict[val.properties.deviceId] = val.properties.monthConsume
+     dayHoursDict[val.properties.deviceId] = val.properties.dayHours
+     weekHoursDict[val.properties.deviceId] = val.properties.weekHours
+     monthHoursDict[val.properties.deviceId] = val.properties.monthHours
 
   });               
  });
