@@ -194,12 +194,23 @@ table {
 #attr-button-graphs
 {
     position:absolute; 
-    right:65px; 
+    right:125px; 
     bottom: 5px; 
     z-index:10000; 
     width:48px; 
     height:48px; 
     background-image: url("./img/button_graph.png");
+}
+
+#attr-button-device
+{
+    position:absolute; 
+    right:65px; 
+    bottom: 5px; 
+    z-index:10000; 
+    width:48px; 
+    height:48px; 
+    background-image: url("./img/button_device.png");
 }
 
   #attr-logo
@@ -289,8 +300,8 @@ table {
 
 
 <script>
- window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=getGETdeviceId(); loadLayer(); setInterval(reloadLayer,5000); };
- //window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=<%=deviceId%>; loadLayer(); setInterval(reloadLayer,5000); };
+window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=getGETdeviceId(); loadLayer(); setInterval(reloadLayer,5000); };
+// window.onload = function() { car=getGETcar(); username=getGETusername(); deviceId=<%=deviceId%>; loadLayer(); setInterval(reloadLayer,5000); }//;
  
  $(document).ready(function() {
   $.ajaxSetup({ cache: false });
@@ -338,52 +349,15 @@ function isMobile(){
   }
 
   function openTooltip(deviceId) {
-    document.getElementById('tooltipIcon').innerHTML = "<img src='./images/" + iconDict[deviceId] + "'/>";
-    document.getElementById('tooltipVehicleLicense').innerHTML = vehicleLicenseDict[deviceId];
-    document.getElementById('tooltipAlias').innerHTML = aliasDict[deviceId];
-    document.getElementById('tooltipLatitude').innerHTML = latitudeDict[deviceId];
-    document.getElementById('tooltipLongitude').innerHTML = longitudeDict[deviceId];
-    document.getElementById('tooltipSpeed').innerHTML = speedDict[deviceId];
-    document.getElementById('tooltipDaySpeed').innerHTML = daySpeedDict[deviceId];
-    document.getElementById('tooltipWeekSpeed').innerHTML = weekSpeedDict[deviceId];
-    document.getElementById('tooltipMonthSpeed').innerHTML = monthSpeedDict[deviceId];
-    document.getElementById('tooltipDayDistance').innerHTML = dayDistanceDict[deviceId];
-    document.getElementById('tooltipWeekDistance').innerHTML = weekDistanceDict[deviceId];
-    document.getElementById('tooltipMonthDistance').innerHTML = monthDistanceDict[deviceId];
-    document.getElementById('tooltipDayConsume').innerHTML = dayConsumeDict[deviceId];
-    document.getElementById('tooltipWeekConsume').innerHTML = weekConsumeDict[deviceId];
-    document.getElementById('tooltipMonthConsume').innerHTML = monthConsumeDict[deviceId];
-    document.getElementById('tooltipDayHours').innerHTML = dayHoursDict[deviceId];
-    document.getElementById('tooltipWeekHours').innerHTML = weekHoursDict[deviceId];
-    document.getElementById('tooltipMonthHours').innerHTML = monthHoursDict[deviceId];
-
-    if(document.getElementById('tooltip').style.opacity <1){
-    document.getElementById('tooltip').style.display = 'block';
+  
+    document.getElementById('formDeviceId').value = deviceId;
+    document.getElementById('formIcon').value = iconDict[deviceId];
+    document.getElementById('formAlias').value = aliasDict[deviceId];
+    document.getElementById('formVehicleLicense').value = vehicleLicenseDict[deviceId];
+    document.getElementById('formLatitude').value = latitudeDict[deviceId];
+    document.getElementById('formLongitude').value = longitudeDict[deviceId];
+    document.getElementById('formSpeed').value = speedDict[deviceId];
     
-    var op = 0.1;  // initial opacity
-    var timer = setInterval(function () {
-        if (op >= 0.9){
-            clearInterval(timer);
-        }
-        document.getElementById('tooltip').style.opacity = op;
-        document.getElementById('tooltip').style.filter = 'alpha(opacity=' + op * 100 + ")";
-        op += op * 0.5;
-    }, 50);
-  }
-  }
-
-function openTooltipMobile(deviceId) {
-    var window_height = $(window).height();  //getting windows height
-    var window_width = $(window).width();  //getting windows width
-
-    $("#tooltip").css({ width: window_width });
-    $("#tooltip").css({ height: window_height });
-    $("#tooltip").css({ top: 0 });
-    $("#tooltip").css({ left: 0 });
-
-    document.getElementById('attr-logo').style.display = 'none';
-
-
     document.getElementById('tooltipIcon').innerHTML = "<img src='./images/" + iconDict[deviceId] + "'/>";
     document.getElementById('tooltipVehicleLicense').innerHTML = vehicleLicenseDict[deviceId];
     document.getElementById('tooltipAlias').innerHTML = aliasDict[deviceId];
@@ -403,19 +377,9 @@ function openTooltipMobile(deviceId) {
     document.getElementById('tooltipWeekHours').innerHTML = weekHoursDict[deviceId];
     document.getElementById('tooltipMonthHours').innerHTML = monthHoursDict[deviceId];
 
-    if(document.getElementById('tooltip').style.opacity <1){
-      document.getElementById('tooltip').style.display = 'block';
-      
-      var op = 0.1;  // initial opacity
-      var timer = setInterval(function () {
-          if (op >= 0.9){
-              clearInterval(timer);
-          }
-          document.getElementById('tooltip').style.opacity = op;
-          document.getElementById('tooltip').style.filter = 'alpha(opacity=' + op * 100 + ")";
-          op += op * 0.5;
-      }, 50);
-    }
+    $('#myModal').modal('show');
+
+
   }
 
 </script>
@@ -423,52 +387,68 @@ function openTooltipMobile(deviceId) {
 </head>
 <body>
 
+ <form id="myform" action="/device" method="POST">
+             <input type="hidden" id="formDeviceId" name="deviceId" value="0" />
+             <input type="hidden" id="formAlias" name="alias" value="0" />
+             <input type="hidden" id="formIcon" name="icon" value="0" />
+             <input type="hidden" id="formVehicleLicense" name="vehicleLicense" value="0" />
+             <input type="hidden" id="formLatitude" name="latitude" value="0" />
+             <input type="hidden" id="formLongitude" name="longitude" value="0" />
+             <input type="hidden" id="formSpeed" name="speed" value="0" />
+            </form>
 
-  <div class="container-fluid">
-   <div class="row-fluid">
-    <div class="span12">
-     <div id="map" class="map">
-       <div id="attr-logo"></div>
-       <div id="attr-conf" onclick="javascript:location.href='http://view.kyroslbs.com/home'"></div>
-       <div id="attr-button-graphs" onclick="javascript:location.href='http://view.kyroslbs.com/graphs'"></div>
-       <div id="attr-button-update" onclick="javascript:reloadLayer();"></div>
-       <div id="info"></div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
 
-       <div id="tooltip">
-        <div id="close" ><a href="javascript:closeTooltip();"><img src="./img/close.png"/></a></div>
-        <div id="deviceInfo">
-          <table>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><img src="./img/close.png"/></button>
+        <!--h4 class="modal-title" id="myModalLabel">Log in</h4-->
+            <table border="0">
             <tr>
-              <td><img src='./img/selectButton2.png'/></td>
-              <td id="tooltipIcon"></td>
+              <td width="20%" id="tooltipIcon"></td>
+              <td><font color="black" id="tooltipVehicleLicense">---</font></td>
+            </tr>
+            </table>
+
+      </div> <!-- /.modal-header -->
+
+      <div class="modal-body">
+
+          <div class="form-group">
+          
+            <table border="0">
+            <!--tr>
+              <td><b>Vehicle license</b></td>
+              <td><font color="black" id="tooltipVehicleLicense">---</font></td>
+            </tr-->
+            <tr>
+              <td width="20%"><b>Alias</b></td>
+              <td><font color="black" id="tooltipAlias">---</font></td>
             </tr>
             <tr>
-              <td><font color="white" id="tooltipVehicleLicense">---</font></td>
-              <td>Vehicle license</td>
+              <td><b>Latitude</b></td>
+              <td><font color="black" id="tooltipLatitude">---</font></td>
             </tr>
             <tr>
-              <td><font color="white" id="tooltipAlias">---</font></td>
-              <td>Alias</td>
+              <td><b>Longitude</b></td>
+              <td><font color="black" id="tooltipLongitude">---</font></td>
             </tr>
             <tr>
-              <td><font color="white" id="tooltipLatitude">---</font></td>
-              <td>Latitude</td>
-            </tr>
-            <tr>
-              <td><font color="white" id="tooltipLongitude">---</font></td>
-              <td>Longitude</td>
-            </tr>
-            <tr>
-              <td><font color="white" id="tooltipSpeed">---</font></td>
-              <td>Speed (Km/h)</td>
+              <td><b>Speed (Km/h)</b></td>
+              <td><font color="black" id="tooltipSpeed">---</font></td>
             </tr>
             <tr>
               <td>&nbsp;</td>
               <td>&nbsp;</td>
             </tr>
           </table>
-        </div>
-        <div id="deviceOdometer">
+
+            
+          </div> <!-- /.form-group -->
+
+            <div class="form-group">
+<div id="deviceOdometer">
           <table class="bordered">
           <thead>
           <tr>
@@ -506,8 +486,38 @@ function openTooltipMobile(deviceId) {
             </tbody>
           </table>
         </div>
+</div>
+    
 
-       </div>
+      </div> <!-- /.modal-body -->
+
+      <div class="modal-footer">
+        <button class="form-control btn btn-primary">Seleccionar</button>
+
+        <div class="progress">
+          <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="100" style="width: 0%;">
+            <span class="sr-only">progress</span>
+          </div>
+        </div>
+      </div> <!-- /.modal-footer -->
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+  <div class="container-fluid">
+   <div class="row-fluid">
+    <div class="span12">
+     <div id="map" class="map">
+       <div id="attr-logo"></div>
+       <!--div id="attr-conf" onclick="javascript:location.href=window.location.host"></div-->
+       <div id="attr-conf" onclick="javascript:location.href='http://view.kyroslbs.com/home'"></div>
+       <div id="attr-button-graphs" onclick="javascript:location.href='http://view.kyroslbs.com/graphs'"></div>
+       <div id="attr-button-device" onclick="javascript:location.href='http://view.kyroslbs.com/device'"></div>
+       <div id="attr-button-update" onclick="javascript:reloadLayer();"></div>
+       <div id="info"></div>
+
+
 
      </div>
    </div>
@@ -645,9 +655,17 @@ var lineStyle = new ol.style.Style({
 
 
 
-    function getCarImage(icon) 
+    function getCarImage(vehicleState, posDate, iconReal, iconCover, iconAlarm) 
     {
-      return './images/' + icon;
+      var now = new Date();
+      //console.log("-->" + now.getTime());
+      if (vehicleState==0)
+        if (posDate < now.getTime() - 600000)  // posicion antigua: 10 minutos
+          return './images/' + iconCover;
+        else
+          return './images/' + iconReal;
+      else
+        return './images/' + iconAlarm;
     }
 
 
@@ -691,12 +709,11 @@ function loadLayer() {
   
  //var fileJson = "./json/users/realTime/<%=user%>.json?";
 
-
  $.getJSON( fileJson + new Date().getTime(), function( data ) {
 
    var items = [];
    $.each( data, function( key, val ) {
-     processDevice (val.properties.license,val.properties.alias,val.geometry.coordinates[0],val.geometry.coordinates[1],val.properties.speed,val.properties.heading,val.properties.tracking_state,val.properties.vehicle_state, val.properties.icon, val.properties.pos_date, val.properties.deviceId);
+     processDevice (val.properties.license,val.properties.alias,val.geometry.coordinates[0],val.geometry.coordinates[1],val.properties.speed,val.properties.heading,val.properties.vehicle_state, val.properties.iconReal, val.properties.iconCover, val.properties.iconAlarm, val.properties.pos_date, val.properties.deviceId);
 
      if (car != null)
       followCar(car, val.properties.license,val.geometry.coordinates[1],val.geometry.coordinates[0]);
@@ -726,7 +743,7 @@ function loadLayer() {
 
 
 function reloadLayer() {
-  if (!isMobile()) {
+  //if (!isMobile()) {
     var fileJson = "./json/users/realTime/crueda.json?";
     if (username != null)
       fileJson = "./json/users/realTime/" + username + ".json?";
@@ -743,10 +760,10 @@ function reloadLayer() {
           followCar(car, val.properties.license,val.geometry.coordinates[1],val.geometry.coordinates[0]);
       });               
      });
-  }
+  //}
 }
 
-function processDevice(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_state, icon, pos_date, deviceId) {             
+function processDevice(ident,alias,lon,lat,speed,heading,vehicleState, iconReal, iconCover, iconAlarm, posDate, deviceId) {             
 //function processCar(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_state, icon, pos_date, lat2, lon2, lat3, lon3, lat4, lon4, lat5, lon5) {             
  /*if (ident=='001') 
  {
@@ -754,16 +771,16 @@ function processDevice(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_
  } */          
    //TODO: lo quito para que siempre salgan los coches ordenados ?
    //if (dict[ident][0] != lon  || dict[ident][1] != lat) 
-  iconDict[deviceId] = icon;
+  iconDict[deviceId] = iconReal;
   vehicleLicenseDict[deviceId] = ident;
   aliasDict[deviceId] = alias;
   latitudeDict[deviceId] = lat;
   longitudeDict[deviceId] = lon;
   speedDict[deviceId] = speed;
 
-   if ( (dict_date[ident]==null) || (dict_date[ident]<pos_date) )
+   if ( (dict_date[ident]==null) || (dict_date[ident]<posDate) )
    {
-    dict_date[ident]=pos_date;
+    dict_date[ident]=posDate;
 
     // Eliminar el icono de todas las capas
     iFeature = vectorTrackingSource.getFeatureById(ident);
@@ -772,14 +789,14 @@ function processDevice(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_
    }
 
    // añadir el icono
-   add (ident,alias,lon,lat,speed,heading,tracking_state,vehicle_state, icon, deviceId);
+   add (ident,alias,lon,lat,speed,heading,vehicleState, iconReal, iconCover, iconAlarm, deviceId, posDate);
 
    // añadir las lineas
    //addLines(lat, lon, lat2, lon2, lat3, lon3, lat4, lon4, lat5, lon5)
  }
 }
 
-    function add(ident, alias, lon, lat, speed, heading, tracking_state, vehicle_state, icon, deviceId) {
+    function add(ident, alias, lon, lat, speed, heading, vehicleState, iconReal, iconCover, iconAlarm, deviceId, posDate) {
       var geo_point = new ol.geom.Point(ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857'));
 
       var iconFeature = new ol.Feature({
@@ -788,7 +805,7 @@ function processDevice(ident,alias,lon,lat,speed,heading,tracking_state,vehicle_
         name: alias
       });
 
-      var image_src = getCarImage(icon); 
+      var image_src = getCarImage(vehicleState, posDate, iconReal, iconCover, iconAlarm); 
       
       var iconStyle;
       var iconScale = 1;
@@ -1173,25 +1190,42 @@ var displayFeatureInfo = function(pixel) {
    return feature;
  });
  if (feature) {
-    if (isMobile()) {
-             openTooltipMobile(feature.get('id'));
-    } else {
+    //if (isMobile()) {
+             //openTooltip(feature.get('id'));
+    //} else {
              //alert(feature.get('name'));
              info.tooltip('hide')
              .attr('data-original-title', feature.get('name'))
              .tooltip('fixTitle')
              .tooltip('show');
 
-             openTooltip(feature.get('id')); 
+             //openTooltip(feature.get('id')); 
              //moveMap(feature.get('id'));     
-    }
+    //}
              
            } else {
              info.tooltip('hide');
              //closeTooltip();
            }
          };
-         
+
+var displayTooltipInfo = function(pixel) {
+ info.css({
+   left: pixel[0] + 'px',
+   top: (pixel[1] - 15) + 'px'
+ });
+ var feature = map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+   return feature;
+ });
+ if (feature) {
+    //if (isMobile()) {
+             openTooltip(feature.get('id'));
+    //} else {
+             //alert(feature.get('name'));
+             info.tooltip('hide');
+           }
+         };
+
          map.on('pointermove', function(evt) {
            if (evt.dragging) {
              info.tooltip('hide');
@@ -1201,10 +1235,10 @@ var displayFeatureInfo = function(pixel) {
          });
          
          map.on('click', function(evt) {
-           displayFeatureInfo(evt.pixel);
-           if (!isMobile()) {
-              closeTooltip();
-            }
+           displayTooltipInfo(evt.pixel);
+           //if (!isMobile()) {
+           //   closeTooltip();
+            //}
 
          });
          
